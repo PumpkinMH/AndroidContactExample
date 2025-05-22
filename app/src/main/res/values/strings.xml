@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Contact Example</string>
+    <string name="name_field">Name</string>
+    <string name="age_field">Age</string>
+    <string name="school_field">Schools (separate with semicolons)</string>
+    <string name="contact_error">Please fill all fields properly</string>
+</resources>
