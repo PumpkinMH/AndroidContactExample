@@ -43,6 +43,9 @@ private ActivityResultLauncher<Intent> startForResult;
         list.setAdapter(adapter);
         list.setOnItemClickListener((parent, view, position, id) -> {
             Toast.makeText(this, "This will launch something!", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, ViewContactActivity.class);
+            intent.putExtra("contact", contacts.get(position));
+            startActivity(intent);
         });
 
         startForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
