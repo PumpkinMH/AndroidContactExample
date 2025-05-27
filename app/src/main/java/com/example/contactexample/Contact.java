@@ -51,6 +51,23 @@ public class Contact implements Serializable {
         return schools;
     }
 
+    public String[] getSchoolNames() {
+        String[] schoolNames = new String[schools.length];
+        for(int i = 0; i < schools.length; i++) {
+            schoolNames[i] = schools[i].getName();
+        }
+        return schoolNames;
+    }
+
+    public String getSchoolNamesString() {
+        StringBuilder schoolNames = new StringBuilder();
+        for(int i = 0; i < schools.length; i++) {
+            schoolNames.append(schools[i].getName()).append("|");
+        }
+
+        return schoolNames.toString();
+    }
+
     public Nationality getNationality() {
         return nationality;
     }

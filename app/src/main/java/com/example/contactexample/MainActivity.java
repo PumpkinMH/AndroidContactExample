@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
 private ArrayList<Contact> contacts;
 private ListView list;
 private ActivityResultLauncher<Intent> startForResult;
+private DBHandler db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,11 +48,14 @@ private ActivityResultLauncher<Intent> startForResult;
             startActivity(intent);
         });
 
+        db = new DBHandler(this);
+
         startForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
             if (result.getResultCode() == RESULT_OK) {
                 Intent intent = result.getData();
                 Contact contact = (Contact) intent.getSerializableExtra("contact");
                 contacts.add(contact);
+                db.addContact(contact);
                 adapter.notifyDataSetChanged();
             }
         });
