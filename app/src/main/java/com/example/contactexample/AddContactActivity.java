@@ -76,7 +76,11 @@ public class AddContactActivity extends AppCompatActivity {
         String age = contactAge.getText().toString();
 
         String schools = contactSchools.getText().toString();
-        String[] schoolsArray = schools.split(";");
+        String[] tempSchools = schools.split(";");
+        School[] schoolsArray = new School[tempSchools.length];
+        for (int i = 0; i < tempSchools.length; i++) {
+            schoolsArray[i] = new School(tempSchools[i]);
+        }
 
         Nationality nationality = (Nationality) contactNationality.getSelectedItem();
 

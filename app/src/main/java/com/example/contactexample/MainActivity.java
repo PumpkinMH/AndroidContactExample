@@ -42,7 +42,6 @@ private ActivityResultLauncher<Intent> startForResult;
         ArrayAdapter<Contact> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, contacts);
         list.setAdapter(adapter);
         list.setOnItemClickListener((parent, view, position, id) -> {
-            Toast.makeText(this, "This will launch something!", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this, ViewContactActivity.class);
             intent.putExtra("contact", contacts.get(position));
             startActivity(intent);

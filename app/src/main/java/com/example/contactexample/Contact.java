@@ -6,11 +6,11 @@ import java.util.ArrayList;
 public class Contact implements Serializable {
     private final String name;
     private final String age;
-    private final String[] schools;
+    private final School[] schools;
     private final Nationality nationality;
     private final Gender gender;
 
-    public Contact(String name, String age, String[] schools, Nationality nationality, Gender gender) {
+    public Contact(String name, String age, School[] schools, Nationality nationality, Gender gender) {
         if(name == null || name.isEmpty()) {
             throw new IllegalArgumentException("Name cannot be empty");
         }
@@ -23,7 +23,7 @@ public class Contact implements Serializable {
             throw new IllegalArgumentException("Age must be a number");
         }
 
-        if(schools == null || schools.length == 0 || schools[0].isEmpty()) {
+        if(schools == null || schools.length == 0 || schools[0].getName().isEmpty()) {
             throw new IllegalArgumentException("Schools cannot be empty");
         }
         this.schools = schools;
@@ -47,7 +47,7 @@ public class Contact implements Serializable {
         return age;
     }
 
-    public String[] getSchools() {
+    public School[] getSchools() {
         return schools;
     }
 

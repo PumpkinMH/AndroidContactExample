@@ -44,8 +44,8 @@ public class ViewContactActivity extends AppCompatActivity {
         ageDisplay.setText(getString(R.string.age_display, contact.getAge()));
 
         StringBuilder schools = new StringBuilder();
-        for(String school : contact.getSchools()) {
-            schools.append(school.stripTrailing().stripLeading()).append(", ");
+        for(School school : contact.getSchools()) {
+            schools.append(school.getName().stripTrailing().stripLeading()).append(", ");
         }
         schools.replace(schools.length() - 2, schools.length(), "");
         schoolDisplay.setText(getString(R.string.school_display, schools.toString()));
