@@ -1,7 +1,11 @@
 package com.example.contactexample;
 
+import androidx.annotation.Nullable;
+
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Objects;
 
 public class Contact implements Serializable {
     private final String name;
@@ -79,5 +83,39 @@ public class Contact implements Serializable {
     @Override
     public String toString() {
         return name;
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || this.getClass() != obj.getClass()) {
+            return false;
+        }
+        Contact contact = (Contact) obj;
+
+        boolean nameEqual = this.name.equals(contact.name);
+        boolean ageEqual = this.age.equals(contact.age);
+        boolean schoolsEqual = true;
+        if (this.schools.length != contact.schools.length) {
+            schoolsEqual = false;
+        } else {
+            for (int i = 0; i < this.schools.length; i++) {
+                if (!this.schools[i].getName().equals(contact.schools[i].getName())) {
+                    schoolsEqual = false;
+                    break;
+                }
+            }
+        }
+        boolean nationalityEqual = this.nationality.equals(contact.nationality);
+        boolean genderEqual = this.gender.equals(contact.gender);
+
+        return nameEqual && ageEqual && schoolsEqual && nationalityEqual && genderEqual;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, age, Arrays.hashCode(schools), nationality, gender);
     }
 }

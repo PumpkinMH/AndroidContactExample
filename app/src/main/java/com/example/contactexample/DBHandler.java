@@ -76,6 +76,26 @@ public class DBHandler extends SQLiteOpenHelper {
         cursorContacts.close();
         return contacts;
     }
+    public void deleteContact(Contact contact) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String whereClause = NAME_COL + " = ? AND " +
+                AGE_COL + " = ? AND " +
+                SCHOOLS_COL + " = ? AND " +
+                NATIONALITY_COL + " = ? AND " +
+                GENDER_COL + " = ?";
+
+        String[] whereArgs = {
+                contact.getName(),
+                String.valueOf(contact.getAge()),
+                contact.getSchoolNamesString(),
+                contact.getNationality().name(),
+                contact.getGender().name()
+        };
+        if(db.delete(TABLE_NAME, whereClause, whereArgs) == 0) {
+            throw new RuntimeException("Failed to delete contact");
+        }
+        db.close();
+    }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {

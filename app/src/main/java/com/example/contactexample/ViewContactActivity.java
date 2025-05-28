@@ -1,6 +1,9 @@
 package com.example.contactexample;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
 
@@ -17,6 +20,7 @@ public class ViewContactActivity extends AppCompatActivity {
     private TextView schoolDisplay;
     private TextView nationalityDisplay;
     private TextView genderDisplay;
+    private Contact contact;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +43,7 @@ public class ViewContactActivity extends AppCompatActivity {
         nationalityDisplay = findViewById(R.id.nationalityDisplay);
         genderDisplay = findViewById(R.id.genderDisplay);
 
-        Contact contact = (Contact) getIntent().getSerializableExtra("contact");
+        contact = (Contact) getIntent().getSerializableExtra("contact");
         nameDisplay.setText(getString(R.string.name_display, contact.getName()));
         ageDisplay.setText(getString(R.string.age_display, contact.getAge()));
 
@@ -60,7 +64,20 @@ public class ViewContactActivity extends AppCompatActivity {
         if(item.getItemId() == android.R.id.home) {
             finish();
             return true;
+        } else if(item.getItemId() == R.id.deleteContact) {
+            Intent returnIntent = new Intent();
+            returnIntent.putExtra("contact", contact);
+            setResult(RESULT_OK, returnIntent);
+            finish();
+            return true;
         }
         return false;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.view_contact_menubar, menu);
+        return true;
     }
 }

@@ -7,7 +7,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
@@ -22,7 +21,8 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 private ArrayList<Contact> contacts;
 private ListView list;
-private ActivityResultLauncher<Intent> startForResult;
+private ActivityResultLauncher<Intent> startForAddResult;
+private ActivityResultLauncher<Intent> startForViewResult;
 private DBHandler db;
 
     @Override
@@ -46,16 +46,30 @@ private DBHandler db;
         list.setOnItemClickListener((parent, view, position, id) -> {
             Intent intent = new Intent(this, ViewContactActivity.class);
             intent.putExtra("contact", contacts.get(position));
-            startActivity(intent);
+            startForViewResult.launch(intent);
         });
 
         // Code to add contact
-        startForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+        startForAddResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
             if (result.getResultCode() == RESULT_OK) {
                 Intent intent = result.getData();
                 Contact contact = (Contact) intent.getSerializableExtra("contact");
                 contacts.add(contact);
                 db.addContact(contact);
+                adapter.notifyDataSetChanged();
+            }
+        });
+
+        // Code to delete contact
+        startForViewResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            if (result.getResultCode() == RESULT_OK) {
+                Intent intent = result.getData();
+                Contact contact = (Contact) intent.getSerializableExtra("contact");
+
+                if(!contacts.remove(contact)) {
+                    throw new IllegalArgumentException("Contact not found");
+                }
+                db.deleteContact(contact);
                 adapter.notifyDataSetChanged();
             }
         });
@@ -72,7 +86,7 @@ private DBHandler db;
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == R.id.addContact) {
             Intent intent = new Intent(this, AddContactActivity.class);
-            startForResult.launch(intent);
+            startForAddResult.launch(intent);
             return true;
         }
         return false;
@@ -80,5 +94,11 @@ private DBHandler db;
 
     private ArrayList<Contact> getContactList() {
         return db.getContacts();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        db.close();
     }
 }
