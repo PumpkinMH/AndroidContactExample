@@ -2,8 +2,11 @@ package com.example.contactexample;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import java.util.ArrayList;
 
 public class DBHandler extends SQLiteOpenHelper {
     private static final String DB_NAME = "contactExampleDB";
@@ -43,6 +46,35 @@ public class DBHandler extends SQLiteOpenHelper {
         values.put(GENDER_COL, contact.getGender().name());
         db.insert(TABLE_NAME, null, values);
         db.close();
+    }
+
+    public ArrayList<Contact> getContacts() {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursorContacts = db.rawQuery("SELECT * FROM " + TABLE_NAME, null);
+        ArrayList<Contact> contacts = new ArrayList<>();
+        if(cursorContacts.moveToFirst()) {
+            do {
+                String name = cursorContacts.getString(cursorContacts.getColumnIndex(NAME_COL));
+                String age = cursorContacts.getString(cursorContacts.getColumnIndex(AGE_COL));
+
+                String schools = cursorContacts.getString(cursorContacts.getColumnIndex(SCHOOLS_COL));
+                String[] trimmedSchools = schools.split("\\|");
+                ArrayList<School> schoolsList = new ArrayList<>();
+                for(String school : trimmedSchools) {
+                    if(!school.isEmpty()) {
+                        schoolsList.add(new School(school));
+                    }
+                }
+                School[] actualSchools = schoolsList.toArray(new School[0]);
+
+                Nationality nationality = Nationality.valueOf(cursorContacts.getString(cursorContacts.getColumnIndex(NATIONALITY_COL)));
+                Gender gender = Gender.valueOf(cursorContacts.getString(cursorContacts.getColumnIndex(GENDER_COL)));
+                Contact contact = new Contact(name, age, actualSchools, nationality, gender);
+                contacts.add(contact);
+            } while(cursorContacts.moveToNext());
+        }
+        cursorContacts.close();
+        return contacts;
     }
 
     @Override

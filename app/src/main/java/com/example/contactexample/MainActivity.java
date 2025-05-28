@@ -38,7 +38,8 @@ private DBHandler db;
 
         setSupportActionBar(findViewById(R.id.toolbar2));
 
-        contacts = new ArrayList<Contact>();
+        db = new DBHandler(this);
+        contacts = getContactList();
         list = findViewById(R.id.contactList);
         ArrayAdapter<Contact> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, contacts);
         list.setAdapter(adapter);
@@ -48,8 +49,7 @@ private DBHandler db;
             startActivity(intent);
         });
 
-        db = new DBHandler(this);
-
+        // Code to add contact
         startForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
             if (result.getResultCode() == RESULT_OK) {
                 Intent intent = result.getData();
@@ -76,5 +76,9 @@ private DBHandler db;
             return true;
         }
         return false;
+    }
+
+    private ArrayList<Contact> getContactList() {
+        return db.getContacts();
     }
 }
