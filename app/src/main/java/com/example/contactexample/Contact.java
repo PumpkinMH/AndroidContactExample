@@ -13,6 +13,7 @@ public class Contact implements Serializable {
     private final School[] schools;
     private final Nationality nationality;
     private final Gender gender;
+    private long Id;
 
     public Contact(String name, String age, School[] schools, Nationality nationality, Gender gender) {
         if(name == null || name.isEmpty()) {
@@ -41,6 +42,11 @@ public class Contact implements Serializable {
             throw new IllegalArgumentException("Gender cannot be null");
         }
         this.gender = gender;
+        this.Id = -1;
+    }
+    public Contact(String name, String age, School[] schools, Nationality nationality, Gender gender, long Id) {
+        this(name, age, schools, nationality, gender);
+        this.Id = Id;
     }
 
     public String getName() {
@@ -80,6 +86,16 @@ public class Contact implements Serializable {
         return gender;
     }
 
+    public long getId() {
+        return Id;
+    }
+
+    public void setId(long Id) {
+        if(this.Id == -1) {
+            this.Id = Id;
+        }
+    }
+
     @Override
     public String toString() {
         return name;
@@ -94,28 +110,14 @@ public class Contact implements Serializable {
             return false;
         }
         Contact contact = (Contact) obj;
-
-        boolean nameEqual = this.name.equals(contact.name);
-        boolean ageEqual = this.age.equals(contact.age);
-        boolean schoolsEqual = true;
-        if (this.schools.length != contact.schools.length) {
-            schoolsEqual = false;
-        } else {
-            for (int i = 0; i < this.schools.length; i++) {
-                if (!this.schools[i].getName().equals(contact.schools[i].getName())) {
-                    schoolsEqual = false;
-                    break;
-                }
-            }
+        if(this.Id == -1 || contact.Id == -1) {
+            return false;
         }
-        boolean nationalityEqual = this.nationality.equals(contact.nationality);
-        boolean genderEqual = this.gender.equals(contact.gender);
-
-        return nameEqual && ageEqual && schoolsEqual && nationalityEqual && genderEqual;
+        return this.Id == contact.Id;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, age, Arrays.hashCode(schools), nationality, gender);
+        return Objects.hash(Id);
     }
 }

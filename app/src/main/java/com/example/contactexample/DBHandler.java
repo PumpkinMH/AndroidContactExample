@@ -44,7 +44,8 @@ public class DBHandler extends SQLiteOpenHelper {
         values.put(SCHOOLS_COL, contact.getSchoolNamesString());
         values.put(NATIONALITY_COL, contact.getNationality().name());
         values.put(GENDER_COL, contact.getGender().name());
-        db.insert(TABLE_NAME, null, values);
+        long id = db.insert(TABLE_NAME, null, values);
+        contact.setId(id);
         db.close();
     }
 
@@ -69,7 +70,8 @@ public class DBHandler extends SQLiteOpenHelper {
 
                 Nationality nationality = Nationality.valueOf(cursorContacts.getString(cursorContacts.getColumnIndex(NATIONALITY_COL)));
                 Gender gender = Gender.valueOf(cursorContacts.getString(cursorContacts.getColumnIndex(GENDER_COL)));
-                Contact contact = new Contact(name, age, actualSchools, nationality, gender);
+                long id = cursorContacts.getLong(cursorContacts.getColumnIndex(ID_COL));
+                Contact contact = new Contact(name, age, actualSchools, nationality, gender, id);
                 contacts.add(contact);
             } while(cursorContacts.moveToNext());
         }
@@ -78,18 +80,10 @@ public class DBHandler extends SQLiteOpenHelper {
     }
     public void deleteContact(Contact contact) {
         SQLiteDatabase db = this.getWritableDatabase();
-        String whereClause = NAME_COL + " = ? AND " +
-                AGE_COL + " = ? AND " +
-                SCHOOLS_COL + " = ? AND " +
-                NATIONALITY_COL + " = ? AND " +
-                GENDER_COL + " = ?";
+        String whereClause = ID_COL + " = ?";
 
         String[] whereArgs = {
-                contact.getName(),
-                String.valueOf(contact.getAge()),
-                contact.getSchoolNamesString(),
-                contact.getNationality().name(),
-                contact.getGender().name()
+                String.valueOf(contact.getId())
         };
         if(db.delete(TABLE_NAME, whereClause, whereArgs) == 0) {
             throw new RuntimeException("Failed to delete contact");
