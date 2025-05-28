@@ -93,6 +93,8 @@ public class Contact implements Serializable {
     public void setId(long Id) {
         if(this.Id == -1) {
             this.Id = Id;
+        } else {
+            throw new IllegalStateException("Id already set");
         }
     }
 
