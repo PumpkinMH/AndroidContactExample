@@ -8,6 +8,8 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -21,6 +23,10 @@ public class ViewContactActivity extends AppCompatActivity {
     private TextView nationalityDisplay;
     private TextView genderDisplay;
     private Contact contact;
+    private ActivityResultLauncher<Intent> startForEditResult;
+
+    public static final int RESULT_CODE_DELETE = 101;
+    public static final int RESULT_CODE_EDIT = 102;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,18 +50,21 @@ public class ViewContactActivity extends AppCompatActivity {
         genderDisplay = findViewById(R.id.genderDisplay);
 
         contact = (Contact) getIntent().getSerializableExtra("contact");
-        nameDisplay.setText(getString(R.string.name_display, contact.getName()));
-        ageDisplay.setText(getString(R.string.age_display, contact.getAge()));
 
-        StringBuilder schools = new StringBuilder();
-        for(School school : contact.getSchools()) {
-            schools.append(school.getName().stripTrailing().stripLeading()).append(", ");
-        }
-        schools.replace(schools.length() - 2, schools.length(), "");
-        schoolDisplay.setText(getString(R.string.school_display, schools.toString()));
+        updateLabels(contact);
 
-        nationalityDisplay.setText(getString(R.string.nationality_display, contact.getNationality()));
-        genderDisplay.setText(getString(R.string.gender_display, contact.getGender()));
+        startForEditResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            if (result.getResultCode() == RESULT_OK) {
+                Intent intent = result.getData();
+                Contact newContact = (Contact) intent.getSerializableExtra("contact");
+                DBHandler db = new DBHandler(this);
+                db.editContact(contact, newContact);
+                newContact.setId(contact.getId());
+                this.contact = newContact;
+                updateLabels(contact);
+                setResult(RESULT_CODE_EDIT);
+            }
+        });
 
     }
 
@@ -66,9 +75,14 @@ public class ViewContactActivity extends AppCompatActivity {
             return true;
         } else if(item.getItemId() == R.id.deleteContact) {
             Intent returnIntent = new Intent();
-            returnIntent.putExtra("contact", contact);
-            setResult(RESULT_OK, returnIntent);
+            returnIntent.putExtra("deleteContact", contact);
+            setResult(RESULT_CODE_DELETE, returnIntent);
             finish();
+            return true;
+        } else if(item.getItemId() == R.id.editContact) {
+            Intent intent = new Intent(this, EditContactActivity.class);
+            intent.putExtra("contact", contact);
+            startForEditResult.launch(intent);
             return true;
         }
         return false;
@@ -79,5 +93,20 @@ public class ViewContactActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.view_contact_menubar, menu);
         return true;
+    }
+
+    private void updateLabels(Contact sourceContact) {
+        nameDisplay.setText(getString(R.string.name_display, sourceContact.getName()));
+        ageDisplay.setText(getString(R.string.age_display, sourceContact.getAge()));
+
+        StringBuilder schools = new StringBuilder();
+        for(School school : sourceContact.getSchools()) {
+            schools.append(school.getName().stripTrailing().stripLeading()).append(", ");
+        }
+        schools.replace(schools.length() - 2, schools.length(), "");
+        schoolDisplay.setText(getString(R.string.school_display, schools.toString()));
+
+        nationalityDisplay.setText(getString(R.string.nationality_display, sourceContact.getNationality()));
+        genderDisplay.setText(getString(R.string.gender_display, sourceContact.getGender()));
     }
 }

@@ -60,16 +60,18 @@ private DBHandler db;
             }
         });
 
-        // Code to delete contact
+        // Code to view contact
         startForViewResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-            if (result.getResultCode() == RESULT_OK) {
+            if (result.getResultCode() == ViewContactActivity.RESULT_CODE_DELETE) {
                 Intent intent = result.getData();
-                Contact contact = (Contact) intent.getSerializableExtra("contact");
-
-                if(!contacts.remove(contact)) {
-                    throw new IllegalArgumentException("Contact not found");
-                }
+                Contact contact = (Contact) intent.getSerializableExtra("deleteContact");
                 db.deleteContact(contact);
+                contacts.clear();
+                contacts.addAll(db.getContacts());
+                adapter.notifyDataSetChanged();
+            } else if(result.getResultCode() == ViewContactActivity.RESULT_CODE_EDIT) {
+                contacts.clear();
+                contacts.addAll(db.getContacts());
                 adapter.notifyDataSetChanged();
             }
         });

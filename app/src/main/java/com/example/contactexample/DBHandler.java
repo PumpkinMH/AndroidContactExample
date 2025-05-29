@@ -91,6 +91,23 @@ public class DBHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void editContact(Contact originalContact, Contact newContactData) {
+        if(originalContact == null || newContactData == null) {
+            throw new IllegalArgumentException("Contact cannot be null");
+        }
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(NAME_COL, newContactData.getName());
+        values.put(AGE_COL, newContactData.getAge());
+        values.put(SCHOOLS_COL, newContactData.getSchoolNamesString());
+        values.put(NATIONALITY_COL, newContactData.getNationality().name());
+        values.put(GENDER_COL, newContactData.getGender().name());
+        if(db.update(TABLE_NAME, values, ID_COL + " = ?", new String[]{String.valueOf(originalContact.getId())}) == 0) {
+            throw new RuntimeException("Failed to edit contact");
+        }
+        db.close();
+    }
+
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 

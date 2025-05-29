@@ -17,19 +17,20 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-public class AddContactActivity extends AppCompatActivity {
+public class EditContactActivity extends AppCompatActivity {
 
     private EditText contactName;
     private EditText contactAge;
     private EditText contactSchools;
     private Spinner contactNationality;
     private RadioGroup contactGender;
+    private Contact contact;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_add_contact);
+        setContentView(R.layout.activity_edit_contact);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -42,8 +43,29 @@ public class AddContactActivity extends AppCompatActivity {
         contactNationality = findViewById(R.id.contactNationality);
         contactGender = findViewById(R.id.contactGender);
 
-        setSupportActionBar(findViewById(R.id.toolbar));
-        getSupportActionBar().setTitle("Add Contact");
+        contact = (Contact) getIntent().getSerializableExtra("contact");
+        contactName.setText(contact.getName());
+        contactAge.setText(contact.getAge());
+
+        StringBuilder schools = new StringBuilder();
+        for(School school : contact.getSchools()) {
+            schools.append(school.getName()).append(";");
+        }
+        schools.replace(schools.length() - 1, schools.length(), "");
+        contactSchools.setText(schools.toString());
+
+        contactNationality.setSelection(contact.getNationality().ordinal());
+        Gender contactGender = contact.getGender();
+        if(contactGender == Gender.MALE) {
+            this.contactGender.check(R.id.contactGenderMale);
+        } else if(contactGender == Gender.FEMALE) {
+            this.contactGender.check(R.id.contactGenderFemale);
+        } else if(contactGender == Gender.OTHER) {
+            this.contactGender.check(R.id.contactGenderOther);
+        }
+
+        setSupportActionBar(findViewById(R.id.toolbar4));
+        getSupportActionBar().setTitle("Edit Contact");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         ArrayAdapter<Nationality> nationalityAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Nationality.values());
@@ -54,14 +76,14 @@ public class AddContactActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.add_contact_menubar, menu);
+        inflater.inflate(R.menu.edit_contact_menubar, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.createContact) {
-            createContact();
+        if(item.getItemId() == R.id.saveContact) {
+            editContact();
             return true;
         } else if(item.getItemId() == android.R.id.home) {
             finish();
@@ -70,7 +92,7 @@ public class AddContactActivity extends AppCompatActivity {
         return false;
     }
 
-    private void createContact() {
+    private void editContact() {
         String name = contactName.getText().toString();
         String age = contactAge.getText().toString();
 
@@ -96,17 +118,17 @@ public class AddContactActivity extends AppCompatActivity {
             return;
         }
 
-        Contact contact;
+        Contact newContact;
         try {
-            contact = new Contact(name, age, schoolsArray, nationality, gender);
+            newContact = new Contact(name, age, schoolsArray, nationality, gender);
         } catch (IllegalArgumentException e) {
             Toast.makeText(this, getString(R.string.contact_error), Toast.LENGTH_SHORT).show();
             return;
         }
 
-        Toast.makeText(this, "Contact Created", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Contact Edited", Toast.LENGTH_SHORT).show();
         Intent returnIntent = new Intent();
-        returnIntent.putExtra("contact", contact);
+        returnIntent.putExtra("contact", newContact);
 
         // create.
         //save to DB

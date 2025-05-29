@@ -8,11 +8,11 @@ import java.util.Arrays;
 import java.util.Objects;
 
 public class Contact implements Serializable {
-    private final String name;
-    private final String age;
-    private final School[] schools;
-    private final Nationality nationality;
-    private final Gender gender;
+    private String name;
+    private String age;
+    private School[] schools;
+    private Nationality nationality;
+    private Gender gender;
     private long Id;
 
     public Contact(String name, String age, School[] schools, Nationality nationality, Gender gender) {
@@ -121,5 +121,13 @@ public class Contact implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(Id);
+    }
+
+    public void editContact(Contact newContact) {
+        this.name = newContact.name;
+        this.age = newContact.age;
+        this.schools = newContact.schools;
+        this.nationality = newContact.nationality;
+        this.gender = newContact.gender;
     }
 }
