@@ -65,13 +65,32 @@ private DBHandler db;
             if (result.getResultCode() == ViewContactActivity.RESULT_CODE_DELETE) {
                 Intent intent = result.getData();
                 Contact contact = (Contact) intent.getSerializableExtra("deleteContact");
+                for(int i = 0; i < contacts.size(); i++) {
+                    if(contacts.get(i).getId() == contact.getId()) {
+                        contacts.remove(i);
+                        break;
+                    }
+                }
                 db.deleteContact(contact);
-                contacts.clear();
-                contacts.addAll(db.getContacts());
+//                contacts.clear();
+//
+//
+//                // contact id
+//                // find contact id in contacts arraylist
+//                // remove deleted contact from arraylist
+//                // notify adapter of change
+//
+//                contacts.addAll(db.getContacts());// filter contacts ; execept deleted contact
                 adapter.notifyDataSetChanged();
             } else if(result.getResultCode() == ViewContactActivity.RESULT_CODE_EDIT) {
-                contacts.clear();
-                contacts.addAll(db.getContacts());
+                Intent intent = result.getData();
+                Contact contact = (Contact) intent.getSerializableExtra("editContact");
+                for (int i = 0; i < contacts.size(); i++) {
+                    if (contacts.get(i).getId() == contact.getId()) {
+                        contacts.set(i, contact);
+                        break;
+                    }
+                }
                 adapter.notifyDataSetChanged();
             }
         });
@@ -104,3 +123,9 @@ private DBHandler db;
         db.close();
     }
 }
+
+/*
+CREATE TABLE Subject
+CREATE TABLE Enrollment
+CREATE TABLE School
+ */

@@ -62,7 +62,9 @@ public class ViewContactActivity extends AppCompatActivity {
                 newContact.setId(contact.getId());
                 this.contact = newContact;
                 updateLabels(contact);
-                setResult(RESULT_CODE_EDIT);
+                Intent returnIntent = new Intent();
+                returnIntent.putExtra("editContact", contact);
+                setResult(RESULT_CODE_EDIT, returnIntent);
             }
         });
 
