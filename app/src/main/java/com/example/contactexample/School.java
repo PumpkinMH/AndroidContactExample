@@ -8,7 +8,7 @@ public class School implements Serializable {
     private long Id;
 
     public School(String name, Nationality location) {
-        if(name == null) {
+        if(name == null || name.isEmpty()) {
             throw new IllegalArgumentException("School name cannot be null");
         }
         if(location == null) {
@@ -17,6 +17,8 @@ public class School implements Serializable {
 
         this.name = name;
         this.location = location;
+
+        Id = -1;
     }
 
     public School(String name, Nationality location, long Id) {

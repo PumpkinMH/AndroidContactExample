@@ -42,14 +42,10 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/contactName" />
 
-    <EditText
+    <Spinner
         android:id="@+id/contactSchools"
         android:layout_width="0dp"
         android:layout_height="48dp"
-        android:layout_marginTop="3dp"
-        android:ems="10"
-        android:hint="@string/school_field"
-        android:inputType="text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/contactAge" />

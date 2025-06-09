@@ -96,7 +96,6 @@ public class DBHandler extends SQLiteOpenHelper {
         }
     }
 
-    //TODO Change school to a school ID
     public ArrayList<Contact> getContacts() {
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursorContacts = db.rawQuery("SELECT * FROM " + TABLE_NAME, null);

@@ -15,6 +15,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import java.util.ArrayList;
+
 public class ViewContactActivity extends AppCompatActivity {
 
     private TextView nameDisplay;
@@ -23,6 +25,7 @@ public class ViewContactActivity extends AppCompatActivity {
     private TextView nationalityDisplay;
     private TextView genderDisplay;
     private Contact contact;
+    private ArrayList<School> schools;
     private ActivityResultLauncher<Intent> startForEditResult;
 
     public static final int RESULT_CODE_DELETE = 101;
@@ -38,6 +41,8 @@ public class ViewContactActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        schools = (ArrayList<School>) getIntent().getSerializableExtra("schools");
 
         setSupportActionBar(findViewById(R.id.toolbar3));
         getSupportActionBar().setTitle("View Contact");
@@ -84,6 +89,7 @@ public class ViewContactActivity extends AppCompatActivity {
         } else if(item.getItemId() == R.id.editContact) {
             Intent intent = new Intent(this, EditContactActivity.class);
             intent.putExtra("contact", contact);
+            intent.putExtra("schools", schools);
             startForEditResult.launch(intent);
             return true;
         }
@@ -101,12 +107,16 @@ public class ViewContactActivity extends AppCompatActivity {
         nameDisplay.setText(getString(R.string.name_display, sourceContact.getName()));
         ageDisplay.setText(getString(R.string.age_display, sourceContact.getAge()));
 
-        StringBuilder schools = new StringBuilder();
-        for(School school : sourceContact.getSchools()) {
-            schools.append(school.getName().stripTrailing().stripLeading()).append(", ");
+        StringBuilder schoolsString = new StringBuilder();
+        for(School school : this.schools) {
+            for(long schoolId : sourceContact.getSchoolIds()) {
+                if(schoolId == school.getId()) {
+                    schoolsString.append(school.getName()).append(", ");
+                }
+            }
         }
-        schools.replace(schools.length() - 2, schools.length(), "");
-        schoolDisplay.setText(getString(R.string.school_display, schools.toString()));
+        schoolsString.replace(schoolsString.length() - 2, schoolsString.length(), "");
+        schoolDisplay.setText(getString(R.string.school_display, schoolsString.toString()));
 
         nationalityDisplay.setText(getString(R.string.nationality_display, sourceContact.getNationality()));
         genderDisplay.setText(getString(R.string.gender_display, sourceContact.getGender()));

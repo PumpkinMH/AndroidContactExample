@@ -17,14 +17,17 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import java.util.ArrayList;
+
 public class EditContactActivity extends AppCompatActivity {
 
     private EditText contactName;
     private EditText contactAge;
-    private EditText contactSchools;
+    private Spinner contactSchools;
     private Spinner contactNationality;
     private RadioGroup contactGender;
     private Contact contact;
+    private ArrayList<School> schools;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +40,8 @@ public class EditContactActivity extends AppCompatActivity {
             return insets;
         });
 
+        schools = (ArrayList<School>) getIntent().getSerializableExtra("schools");
+
         contactName = findViewById(R.id.contactName);
         contactAge = findViewById(R.id.contactAge);
         contactSchools = findViewById(R.id.contactSchools);
@@ -46,13 +51,6 @@ public class EditContactActivity extends AppCompatActivity {
         contact = (Contact) getIntent().getSerializableExtra("contact");
         contactName.setText(contact.getName());
         contactAge.setText(contact.getAge());
-
-        StringBuilder schools = new StringBuilder();
-        for(School school : contact.getSchools()) {
-            schools.append(school.getName()).append(";");
-        }
-        schools.replace(schools.length() - 1, schools.length(), "");
-        contactSchools.setText(schools.toString());
 
         contactNationality.setSelection(contact.getNationality().ordinal());
         Gender contactGender = contact.getGender();
@@ -71,6 +69,18 @@ public class EditContactActivity extends AppCompatActivity {
         ArrayAdapter<Nationality> nationalityAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Nationality.values());
         nationalityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         contactNationality.setAdapter(nationalityAdapter);
+
+        ArrayAdapter<School> schoolAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, schools);
+        schoolAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        contactSchools.setAdapter(schoolAdapter);
+
+        // Modify to enable more schools
+        for(int i = 0; i < schools.size(); i++) {
+            if (schools.get(i).getId() == contact.getSchoolIds()[0]) {
+                contactSchools.setSelection(i);
+                break;
+            }
+        }
     }
 
     @Override
@@ -96,12 +106,9 @@ public class EditContactActivity extends AppCompatActivity {
         String name = contactName.getText().toString();
         String age = contactAge.getText().toString();
 
-        String schools = contactSchools.getText().toString();
-        String[] tempSchools = schools.split(";");
-        School[] schoolsArray = new School[tempSchools.length];
-        for (int i = 0; i < tempSchools.length; i++) {
-            schoolsArray[i] = new School(tempSchools[i]);
-        }
+        // Modify to add more schools
+        School school = (School) contactSchools.getSelectedItem();
+        long[] schoolsArray = {school.getId()};
 
         Nationality nationality = (Nationality) contactNationality.getSelectedItem();
 
@@ -120,7 +127,7 @@ public class EditContactActivity extends AppCompatActivity {
 
         Contact newContact;
         try {
-            newContact = new Contact(name, age, schoolsArray, nationality, gender);
+            newContact = new Contact(name, age, nationality, gender, schoolsArray);
         } catch (IllegalArgumentException e) {
             Toast.makeText(this, getString(R.string.contact_error), Toast.LENGTH_SHORT).show();
             return;

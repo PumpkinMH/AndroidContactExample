@@ -31,6 +31,7 @@ public class Contact implements Serializable {
         if(schoolIds == null) {
             throw new IllegalArgumentException("School ids cannot be null");
         }
+        this.schoolIds = schoolIds;
 
         if(nationality == null) {
             throw new IllegalArgumentException("Nationality cannot be null");
@@ -45,7 +46,7 @@ public class Contact implements Serializable {
     }
     public Contact(String name, String age, Nationality nationality, Gender gender, long[] schoolIds, long id) {
         this(name, age, nationality, gender, schoolIds);
-        this.Id = Id;
+        this.Id = id;
     }
 
     public String getName() {

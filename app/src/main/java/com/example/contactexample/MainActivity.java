@@ -20,9 +20,11 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 private ArrayList<Contact> contacts;
+private ArrayList<School> schools;
 private ListView list;
-private ActivityResultLauncher<Intent> startForAddResult;
+private ActivityResultLauncher<Intent> startForAddContactResult;
 private ActivityResultLauncher<Intent> startForViewResult;
+private ActivityResultLauncher<Intent> startForAddSchoolResult;
 private DBHandler db;
 
     @Override
@@ -40,17 +42,19 @@ private DBHandler db;
 
         db = new DBHandler(this);
         contacts = getContactList();
+        schools = getSchoolList();
         list = findViewById(R.id.contactList);
         ArrayAdapter<Contact> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, contacts);
         list.setAdapter(adapter);
         list.setOnItemClickListener((parent, view, position, id) -> {
             Intent intent = new Intent(this, ViewContactActivity.class);
             intent.putExtra("contact", contacts.get(position));
+            intent.putExtra("schools", schools);
             startForViewResult.launch(intent);
         });
 
         // Code to add contact
-        startForAddResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+        startForAddContactResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
             if (result.getResultCode() == RESULT_OK) {
                 Intent intent = result.getData();
                 Contact contact = (Contact) intent.getSerializableExtra("contact");
@@ -94,6 +98,16 @@ private DBHandler db;
                 adapter.notifyDataSetChanged();
             }
         });
+
+        // Code to add school
+        startForAddSchoolResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            if (result.getResultCode() == RESULT_OK) {
+                Intent intent = result.getData();
+                School school = (School) intent.getSerializableExtra("school");
+                schools.add(school);
+                db.addSchool(school);
+            }
+        });
     }
 
 
@@ -107,7 +121,12 @@ private DBHandler db;
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == R.id.addContact) {
             Intent intent = new Intent(this, AddContactActivity.class);
-            startForAddResult.launch(intent);
+            intent.putExtra("schools", schools);
+            startForAddContactResult.launch(intent);
+            return true;
+        } else if(item.getItemId() == R.id.addSchool) {
+            Intent intent = new Intent(this, AddSchoolActivity.class);
+            startForAddSchoolResult.launch(intent);
             return true;
         }
         return false;
@@ -115,6 +134,10 @@ private DBHandler db;
 
     private ArrayList<Contact> getContactList() {
         return db.getContacts();
+    }
+
+    private ArrayList<School> getSchoolList() {
+        return db.getSchools();
     }
 
     @Override
