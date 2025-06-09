@@ -17,13 +17,16 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import java.util.ArrayList;
+
 public class AddContactActivity extends AppCompatActivity {
 
     private EditText contactName;
     private EditText contactAge;
-    private EditText contactSchools;
+    private Spinner contactSchools;
     private Spinner contactNationality;
     private RadioGroup contactGender;
+    private ArrayList<School> schools;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +38,9 @@ public class AddContactActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        Intent intent = getIntent();
+        schools = (ArrayList<School>) intent.getSerializableExtra("schools");
 
         contactName = findViewById(R.id.contactName);
         contactAge = findViewById(R.id.contactAge);
@@ -49,6 +55,10 @@ public class AddContactActivity extends AppCompatActivity {
         ArrayAdapter<Nationality> nationalityAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Nationality.values());
         nationalityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         contactNationality.setAdapter(nationalityAdapter);
+
+        ArrayAdapter<School> schoolArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, schools);
+        schoolArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        contactSchools.setAdapter(schoolArrayAdapter);
     }
 
     @Override
@@ -74,12 +84,9 @@ public class AddContactActivity extends AppCompatActivity {
         String name = contactName.getText().toString();
         String age = contactAge.getText().toString();
 
-        String schools = contactSchools.getText().toString();
-        String[] tempSchools = schools.split(";");
-        School[] schoolsArray = new School[tempSchools.length];
-        for (int i = 0; i < tempSchools.length; i++) {
-            schoolsArray[i] = new School(tempSchools[i]);
-        }
+        // Modify this to allow multi selection
+        School school = (School) contactSchools.getSelectedItem();
+        long[] schoolsId = {school.getId()};
 
         Nationality nationality = (Nationality) contactNationality.getSelectedItem();
 
@@ -98,7 +105,7 @@ public class AddContactActivity extends AppCompatActivity {
 
         Contact contact;
         try {
-            contact = new Contact(name, age, schoolsArray, nationality, gender);
+            contact = new Contact(name, age, nationality, gender, schoolsId);
         } catch (IllegalArgumentException e) {
             Toast.makeText(this, getString(R.string.contact_error), Toast.LENGTH_SHORT).show();
             return;
