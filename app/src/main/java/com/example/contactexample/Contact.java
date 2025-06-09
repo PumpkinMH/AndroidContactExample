@@ -8,14 +8,14 @@ import java.util.Arrays;
 import java.util.Objects;
 
 public class Contact implements Serializable {
-    private String name;
-    private String age;
-    private School[] schools;
-    private Nationality nationality;
-    private Gender gender;
+    private final String name;
+    private final String age;
+    private long[] schoolIds;
+    private final Nationality nationality;
+    private final Gender gender;
     private long Id;
 
-    public Contact(String name, String age, School[] schools, Nationality nationality, Gender gender) {
+    public Contact(String name, String age, Nationality nationality, Gender gender, long[] schoolIds) {
         if(name == null || name.isEmpty()) {
             throw new IllegalArgumentException("Name cannot be empty");
         }
@@ -28,10 +28,9 @@ public class Contact implements Serializable {
             throw new IllegalArgumentException("Age must be a number");
         }
 
-        if(schools == null || schools.length == 0 || schools[0].getName().isEmpty()) {
-            throw new IllegalArgumentException("Schools cannot be empty");
+        if(schoolIds == null) {
+            throw new IllegalArgumentException("School ids cannot be null");
         }
-        this.schools = schools;
 
         if(nationality == null) {
             throw new IllegalArgumentException("Nationality cannot be null");
@@ -44,8 +43,8 @@ public class Contact implements Serializable {
         this.gender = gender;
         this.Id = -1;
     }
-    public Contact(String name, String age, School[] schools, Nationality nationality, Gender gender, long Id) {
-        this(name, age, schools, nationality, gender);
+    public Contact(String name, String age, Nationality nationality, Gender gender, long[] schoolIds, long id) {
+        this(name, age, nationality, gender, schoolIds);
         this.Id = Id;
     }
 
@@ -55,27 +54,6 @@ public class Contact implements Serializable {
 
     public String getAge() {
         return age;
-    }
-
-    public School[] getSchools() {
-        return schools;
-    }
-
-    public String[] getSchoolNames() {
-        String[] schoolNames = new String[schools.length];
-        for(int i = 0; i < schools.length; i++) {
-            schoolNames[i] = schools[i].getName();
-        }
-        return schoolNames;
-    }
-
-    public String getSchoolNamesString() {
-        StringBuilder schoolNames = new StringBuilder();
-        for(int i = 0; i < schools.length; i++) {
-            schoolNames.append(schools[i].getName()).append("|");
-        }
-
-        return schoolNames.toString();
     }
 
     public Nationality getNationality() {
@@ -96,6 +74,10 @@ public class Contact implements Serializable {
         } else {
             throw new IllegalStateException("Id already set");
         }
+    }
+
+    public long[] getSchoolIds() {
+        return this.schoolIds;
     }
 
     @Override
@@ -121,13 +103,5 @@ public class Contact implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(Id);
-    }
-
-    public void editContact(Contact newContact) {
-        this.name = newContact.name;
-        this.age = newContact.age;
-        this.schools = newContact.schools;
-        this.nationality = newContact.nationality;
-        this.gender = newContact.gender;
     }
 }
