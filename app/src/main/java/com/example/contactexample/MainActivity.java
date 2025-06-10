@@ -7,6 +7,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
@@ -120,10 +121,15 @@ private DBHandler db;
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == R.id.addContact) {
-            Intent intent = new Intent(this, AddContactActivity.class);
-            intent.putExtra("schools", schools);
-            startForAddContactResult.launch(intent);
-            return true;
+            if(schools.isEmpty()) {
+                Toast.makeText(this, "You must add a school first", Toast.LENGTH_SHORT).show();
+                return true;
+            } else {
+                Intent intent = new Intent(this, AddContactActivity.class);
+                intent.putExtra("schools", schools);
+                startForAddContactResult.launch(intent);
+                return true;
+            }
         } else if(item.getItemId() == R.id.addSchool) {
             Intent intent = new Intent(this, AddSchoolActivity.class);
             startForAddSchoolResult.launch(intent);
