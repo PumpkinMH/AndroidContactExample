@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.util.ArrayList;
 
 public class DBHandler extends SQLiteOpenHelper {
+    // Contact section
     private static final String DB_NAME = "contactExampleDB";
     private static final int DB_VERSION = 1;
     private static final String TABLE_NAME = "contactList";
@@ -19,13 +20,27 @@ public class DBHandler extends SQLiteOpenHelper {
     private static final String NATIONALITY_COL = "nationality";
     private static final String GENDER_COL = "gender";
 
+    // School section
     private static final String SCHOOL_TABLE_NAME = "schoolList";
     private static final String SCHOOL_ID_COL = "id";
     private static final String SCHOOL_NAME_COL = "name";
     private static final String SCHOOL_LOCATION_COL = "location";
+    // Contact School Junction
     private static final String CS_TABLE_NAME = "contactSchools";
     private static final String CS_CONTACT_ID_COL = "contact_id";
     private static final String CS_SCHOOL_ID_COL = "school_id";
+    // Course section
+    private static final String COURSE_TABLE_NAME = "courseList";
+    private static final String COURSE_ID_COL = "id";
+    private static final String COURSE_SHORTNAME_COL = "shortName";
+    private static final String COURSE_NAME_COL = "fullName";
+    private static final String COURSE_CREDIT_COL = "credit";
+    private static final String SCHOOL_ID = "school_id";
+    // Courses Contact Junction
+    private static final String CC_TABLE_NAME = "contactCourses";
+    private static final String CC_CONTACT_ID_COL = "contact_id";
+    private static final String CC_COURSE_ID_COL = "course_id";
+
 
     public DBHandler(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
