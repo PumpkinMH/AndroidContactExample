@@ -33,9 +33,9 @@ public class DBHandler extends SQLiteOpenHelper {
     private static final String COURSE_TABLE_NAME = "courseList";
     private static final String COURSE_ID_COL = "id";
     private static final String COURSE_SHORTNAME_COL = "shortName";
-    private static final String COURSE_NAME_COL = "fullName";
+    private static final String COURSE_FULLNAME_COL = "fullName";
     private static final String COURSE_CREDIT_COL = "credit";
-    private static final String SCHOOL_ID = "school_id";
+    private static final String COURSE_SCHOOL_ID_COL = "school_id";
     // Courses Contact Junction
     private static final String CC_TABLE_NAME = "contactCourses";
     private static final String CC_CONTACT_ID_COL = "contact_id";
@@ -48,6 +48,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        // Create contact table
         String query = "CREATE TABLE " + TABLE_NAME + " (" +
                 ID_COL + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 NAME_COL + " TEXT, " +
@@ -56,12 +57,14 @@ public class DBHandler extends SQLiteOpenHelper {
                 GENDER_COL + " TEXT)";
         db.execSQL(query);
 
+        // Create school table
         String query2 = "CREATE TABLE " + SCHOOL_TABLE_NAME + " (" +
                 SCHOOL_ID_COL + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 SCHOOL_NAME_COL + " TEXT, " +
                 SCHOOL_LOCATION_COL + " TEXT)";
         db.execSQL(query2);
 
+        // Create contact_schools junction table
         String query3 = "CREATE TABLE " + CS_TABLE_NAME + " (" +
                 CS_CONTACT_ID_COL + " INTEGER, " +
                 CS_SCHOOL_ID_COL + " INTEGER, " +
@@ -69,6 +72,24 @@ public class DBHandler extends SQLiteOpenHelper {
                 "FOREIGN KEY (" + CS_CONTACT_ID_COL + ") REFERENCES " + TABLE_NAME + "(" + ID_COL + "), " +
                 "FOREIGN KEY (" + CS_SCHOOL_ID_COL + ") REFERENCES " + SCHOOL_TABLE_NAME + "(" + SCHOOL_ID_COL + ") ON DELETE CASCADE)";
         db.execSQL(query3);
+
+        // Create course table
+        String query4 = "CREATE TABLE " + COURSE_TABLE_NAME + " (" +
+                COURSE_ID_COL + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                COURSE_SHORTNAME_COL + " TEXT, " +
+                COURSE_FULLNAME_COL + " TEXT, " +
+                COURSE_CREDIT_COL + " INTEGER, " +
+                COURSE_SCHOOL_ID_COL + " INTEGER)";
+        db.execSQL(query4);
+
+        // Create contact_courses junction table
+        String query5 = "CREATE TABLE " + CC_TABLE_NAME + " (" +
+                CC_CONTACT_ID_COL + " INTEGER, " +
+                CC_COURSE_ID_COL + " INTEGER, " +
+                "PRIMARY KEY (" + CC_CONTACT_ID_COL + ", " + CC_COURSE_ID_COL + "), " +
+                "FOREIGN KEY (" + CC_CONTACT_ID_COL + ") REFERENCES " + TABLE_NAME + "(" + ID_COL + "), " +
+                "FOREIGN KEY (" + CC_COURSE_ID_COL + ") REFERENCES " + COURSE_TABLE_NAME + "(" + COURSE_ID_COL + ") ON DELETE CASCADE)";
+        db.execSQL(query5);
 
     }
 
