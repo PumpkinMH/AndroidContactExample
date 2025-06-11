@@ -196,6 +196,17 @@ public class DBHandler extends SQLiteOpenHelper {
         school.setId(id);
         db.close();
     }
+    public void addCourse(Course course) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COURSE_SHORTNAME_COL, course.getShortName());
+        values.put(COURSE_FULLNAME_COL, course.getFullName());
+        values.put(COURSE_CREDIT_COL, course.getCredit());
+        values.put(COURSE_SCHOOL_ID_COL, course.getSchoolId());
+        long id = db.insert(COURSE_TABLE_NAME, null, values);
+        course.setCourseId(id);
+        db.close();
+    }
     public void deleteContact(Contact contact) {
         SQLiteDatabase db = this.getWritableDatabase();
         String whereClause = ID_COL + " = ?";
