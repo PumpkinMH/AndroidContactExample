@@ -22,10 +22,12 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 private ArrayList<Contact> contacts;
 private ArrayList<School> schools;
+private ArrayList<Course> courses;
 private ListView list;
 private ActivityResultLauncher<Intent> startForAddContactResult;
 private ActivityResultLauncher<Intent> startForViewResult;
 private ActivityResultLauncher<Intent> startForAddSchoolResult;
+private ActivityResultLauncher<Intent> startForAddCourseResult;
 private DBHandler db;
 
     @Override
@@ -44,6 +46,9 @@ private DBHandler db;
         db = new DBHandler(this);
         contacts = getContactList();
         schools = getSchoolList();
+        courses = getCourseList();
+
+        // List initialization
         list = findViewById(R.id.contactList);
         ArrayAdapter<Contact> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, contacts);
         list.setAdapter(adapter);
@@ -109,6 +114,17 @@ private DBHandler db;
                 db.addSchool(school);
             }
         });
+
+        // Code to add course
+        startForAddCourseResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            if (result.getResultCode() == RESULT_OK) {
+                Intent intent = result.getData();
+                Course course = (Course) intent.getSerializableExtra("course");
+                courses.add(course);
+                db.addCourse(course);
+            }
+        });
+
     }
 
 
@@ -124,9 +140,13 @@ private DBHandler db;
             if(schools.isEmpty()) {
                 Toast.makeText(this, "You must add a school first", Toast.LENGTH_SHORT).show();
                 return true;
+            } else if(courses.isEmpty()) {
+                Toast.makeText(this, "You must add a course first", Toast.LENGTH_SHORT).show();
+                return true;
             } else {
                 Intent intent = new Intent(this, AddContactActivity.class);
                 intent.putExtra("schools", schools);
+                intent.putExtra("courses", courses);
                 startForAddContactResult.launch(intent);
                 return true;
             }
@@ -134,6 +154,16 @@ private DBHandler db;
             Intent intent = new Intent(this, AddSchoolActivity.class);
             startForAddSchoolResult.launch(intent);
             return true;
+        } else if(item.getItemId() == R.id.addCourse) {
+            if(schools.isEmpty()) {
+                Toast.makeText(this, "You must add a school first", Toast.LENGTH_SHORT).show();
+                return true;
+            } else {
+                Intent intent = new Intent(this, AddCourseActivity.class);
+                intent.putExtra("schools", schools);
+                startForAddCourseResult.launch(intent);
+                return true;
+            }
         }
         return false;
     }
@@ -144,6 +174,9 @@ private DBHandler db;
 
     private ArrayList<School> getSchoolList() {
         return db.getSchools();
+    }
+    private ArrayList<Course> getCourseList() {
+        return db.getCourses();
     }
 
     @Override

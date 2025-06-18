@@ -9,7 +9,12 @@
         app:showAsAction="always" />
     <item
         android:id="@+id/addSchool"
-        android:icon="@drawable/baseline_school_24"
+        android:icon="@drawable/baseline_business_24"
         android:title="Add School"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/addCourse"
+        android:icon="@drawable/baseline_school_24"
+        android:title="Add Course"
         app:showAsAction="always" />
 </menu>
