@@ -309,6 +309,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 }
             }
 
+            db.delete(CC_TABLE_NAME, CC_CONTACT_ID_COL + " = ?", new String[]{String.valueOf(originalContact.getId())});
             long[] newCourseIds = newContactData.getCourseIds();
             if (newCourseIds != null && newCourseIds.length > 0) {
                 for (long courseId : newCourseIds) {
