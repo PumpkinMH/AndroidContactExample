@@ -1,6 +1,8 @@
 package com.example.contactexample;
 
-public class Course {
+import java.io.Serializable;
+
+public class Course implements Serializable {
     private String shortName;
     private String fullName;
     private int credit;
