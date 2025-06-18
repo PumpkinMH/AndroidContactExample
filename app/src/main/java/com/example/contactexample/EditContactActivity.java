@@ -53,6 +53,14 @@ public class EditContactActivity extends AppCompatActivity {
         contactNationality = findViewById(R.id.contactNationality);
         contactGender = findViewById(R.id.contactGender);
 
+        ArrayAdapter<Nationality> nationalityAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Nationality.values());
+        nationalityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        contactNationality.setAdapter(nationalityAdapter);
+
+        ArrayAdapter<School> schoolAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, schools);
+        schoolAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        contactSchools.setAdapter(schoolAdapter);
+
         contact = (Contact) getIntent().getSerializableExtra("contact");
         contactName.setText(contact.getName());
         contactAge.setText(contact.getAge());
@@ -70,14 +78,6 @@ public class EditContactActivity extends AppCompatActivity {
         setSupportActionBar(findViewById(R.id.toolbar4));
         getSupportActionBar().setTitle("Edit Contact");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        ArrayAdapter<Nationality> nationalityAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Nationality.values());
-        nationalityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        contactNationality.setAdapter(nationalityAdapter);
-
-        ArrayAdapter<School> schoolAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, schools);
-        schoolAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        contactSchools.setAdapter(schoolAdapter);
 
         // Modify to enable more schools
         for(int i = 0; i < schools.size(); i++) {
