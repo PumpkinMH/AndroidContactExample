@@ -215,6 +215,26 @@ public class DBHandler extends SQLiteOpenHelper {
         return schools;
     }
 
+    public ArrayList<Course> getCourses() {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursorCourses = db.rawQuery("SELECT * FROM " + COURSE_TABLE_NAME, null);
+        ArrayList<Course> courses = new ArrayList<>();
+
+        if(cursorCourses.moveToFirst()) {
+            do {
+                String shortName = cursorCourses.getString(cursorCourses.getColumnIndex(COURSE_SHORTNAME_COL));
+                String fullName = cursorCourses.getString(cursorCourses.getColumnIndex(COURSE_FULLNAME_COL));
+                int credit = cursorCourses.getInt(cursorCourses.getColumnIndex(COURSE_CREDIT_COL));
+                long schoolId = cursorCourses.getLong(cursorCourses.getColumnIndex(COURSE_SCHOOL_ID_COL));
+                long id = cursorCourses.getLong(cursorCourses.getColumnIndex(COURSE_ID_COL));
+                Course course = new Course(shortName, fullName, credit, schoolId, id);
+                courses.add(course);
+            } while(cursorCourses.moveToNext());
+        }
+        cursorCourses.close();
+        return courses;
+    }
+
     public void addSchool(School school) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
