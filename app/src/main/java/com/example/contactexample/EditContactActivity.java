@@ -19,6 +19,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import java.util.ArrayList;
 
+//TODO Modify to support courses
 public class EditContactActivity extends AppCompatActivity {
 
     private EditText contactName;
@@ -109,6 +110,7 @@ public class EditContactActivity extends AppCompatActivity {
         // Modify to add more schools
         School school = (School) contactSchools.getSelectedItem();
         long[] schoolsArray = {school.getId()};
+        long[] coursesArray = contact.getCourseIds();
 
         Nationality nationality = (Nationality) contactNationality.getSelectedItem();
 
@@ -127,7 +129,7 @@ public class EditContactActivity extends AppCompatActivity {
 
         Contact newContact;
         try {
-            newContact = new Contact(name, age, nationality, gender, schoolsArray);
+            newContact = new Contact(name, age, nationality, gender, schoolsArray, coursesArray);
         } catch (IllegalArgumentException e) {
             Toast.makeText(this, getString(R.string.contact_error), Toast.LENGTH_SHORT).show();
             return;
