@@ -11,11 +11,12 @@ public class Contact implements Serializable {
     private final String name;
     private final String age;
     private long[] schoolIds;
+    private long[] courseIds;
     private final Nationality nationality;
     private final Gender gender;
     private long Id;
 
-    public Contact(String name, String age, Nationality nationality, Gender gender, long[] schoolIds) {
+    public Contact(String name, String age, Nationality nationality, Gender gender, long[] schoolIds, long[] courseIds) {
         if(name == null || name.isEmpty()) {
             throw new IllegalArgumentException("Name cannot be empty");
         }
@@ -42,10 +43,16 @@ public class Contact implements Serializable {
             throw new IllegalArgumentException("Gender cannot be null");
         }
         this.gender = gender;
+
+        if(courseIds == null) {
+            this.courseIds = new long[0];
+        } else {
+            this.courseIds = courseIds;
+        }
         this.Id = -1;
     }
-    public Contact(String name, String age, Nationality nationality, Gender gender, long[] schoolIds, long id) {
-        this(name, age, nationality, gender, schoolIds);
+    public Contact(String name, String age, Nationality nationality, Gender gender, long[] schoolIds, long[] courseIds ,long id) {
+        this(name, age, nationality, gender, schoolIds, courseIds);
         this.Id = id;
     }
 
@@ -79,6 +86,9 @@ public class Contact implements Serializable {
 
     public long[] getSchoolIds() {
         return this.schoolIds;
+    }
+    public long[] getCourseIds() {
+        return this.courseIds;
     }
 
     @Override
