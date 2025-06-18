@@ -125,6 +125,19 @@ public class DBHandler extends SQLiteOpenHelper {
                     }
                 }
             }
+
+            long[] courseIds = contact.getCourseIds();
+            if (courseIds != null && courseIds.length > 0) {
+                for (long courseId : courseIds) {
+                    ContentValues junctionValues = new ContentValues();
+                    junctionValues.put(CC_CONTACT_ID_COL, contactId);
+                    junctionValues.put(CC_COURSE_ID_COL, courseId);
+                    long junctionId = db.insert(CC_TABLE_NAME, null, junctionValues);
+                    if (junctionId == -1) {
+                        throw new RuntimeException("Failed to insert junction entry");
+                    }
+                }
+            }
             db.setTransactionSuccessful(); // Mark the transaction as successful
         } finally {
             db.endTransaction(); // End the transaction (commit if successful, rollback otherwise)
@@ -161,8 +174,23 @@ public class DBHandler extends SQLiteOpenHelper {
                     actualSchoolIds[i] = schoolIds.get(i);
                 }
 
+                ArrayList<Long> courseIds = new ArrayList<>();
+                String junctionQuery2 = "SELECT " + CC_COURSE_ID_COL + " FROM " + CC_TABLE_NAME + " WHERE " + CC_CONTACT_ID_COL + " = ?";
+                Cursor cursorJunction2 = db.rawQuery(junctionQuery2, new String[]{String.valueOf(id)});
+                if(cursorJunction2.moveToFirst()) {
+                    do {
+                        long courseId = cursorJunction2.getLong(cursorJunction2.getColumnIndex(CC_COURSE_ID_COL));
+                        courseIds.add(courseId);
+                    } while (cursorJunction2.moveToNext());
 
-                Contact contact = new Contact(name, age, nationality, gender, actualSchoolIds, id);
+                }
+                cursorJunction2.close();
+                long[] actualCourseIds = new long[courseIds.size()];
+                for (int i = 0; i < courseIds.size(); i++) {
+                    actualCourseIds[i] = courseIds.get(i);
+                }
+
+                Contact contact = new Contact(name, age, nationality, gender, actualSchoolIds, actualCourseIds, id);
                 contacts.add(contact);
             } while(cursorContacts.moveToNext());
         }
@@ -257,6 +285,19 @@ public class DBHandler extends SQLiteOpenHelper {
                     long junctionId = db.insert(CS_TABLE_NAME, null, junctionValues);
                     if (junctionId == -1) {
                         throw new RuntimeException("Failed to insert new school association for contact ID " + originalContact.getId() + " and school ID " + schoolId);
+                    }
+                }
+            }
+
+            long[] newCourseIds = newContactData.getCourseIds();
+            if (newCourseIds != null && newCourseIds.length > 0) {
+                for (long courseId : newCourseIds) {
+                    ContentValues junctionValues = new ContentValues();
+                    junctionValues.put(CC_CONTACT_ID_COL, originalContact.getId()); // Use originalContact's ID
+                    junctionValues.put(CC_COURSE_ID_COL, courseId);
+                    long junctionId = db.insert(CC_TABLE_NAME, null, junctionValues);
+                    if (junctionId == -1) {
+                        throw new RuntimeException("Failed to insert new course association for contact ID " + originalContact.getId() + " and course ID " + courseId);
                     }
                 }
             }
