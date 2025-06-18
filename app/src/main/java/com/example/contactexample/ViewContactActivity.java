@@ -94,6 +94,7 @@ public class ViewContactActivity extends AppCompatActivity {
             Intent intent = new Intent(this, EditContactActivity.class);
             intent.putExtra("contact", contact);
             intent.putExtra("schools", schools);
+            intent.putExtra("courses", courses);
             startForEditResult.launch(intent);
             return true;
         }
@@ -125,15 +126,20 @@ public class ViewContactActivity extends AppCompatActivity {
         nationalityDisplay.setText(getString(R.string.nationality_display, sourceContact.getNationality()));
         genderDisplay.setText(getString(R.string.gender_display, sourceContact.getGender()));
 
-        StringBuilder coursesString = new StringBuilder();
-        for(Course course : this.courses) {
-            for(long courseId : sourceContact.getCourseIds()) {
-                if(courseId == course.getCourseId()) {
-                    coursesString.append(course.getShortName()).append(", ");
+        if(sourceContact.getCourseIds().length == 0) {
+            courseDisplay.setText(getString(R.string.course_display, "None"));
+            return;
+        } else {
+            StringBuilder coursesString = new StringBuilder();
+            for(Course course : this.courses) {
+                for(long courseId : sourceContact.getCourseIds()) {
+                    if(courseId == course.getCourseId()) {
+                        coursesString.append(course.getShortName()).append(", ");
+                    }
                 }
             }
+            coursesString.replace(coursesString.length() - 2, coursesString.length(), "");
+            courseDisplay.setText(getString(R.string.course_display, coursesString.toString()));
         }
-        coursesString.replace(coursesString.length() - 2, coursesString.length(), "");
-        courseDisplay.setText(getString(R.string.course_display, coursesString.toString()));
     }
 }

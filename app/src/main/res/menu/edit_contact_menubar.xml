@@ -7,4 +7,9 @@
         android:icon="@drawable/baseline_check_24"
         android:title="Save"
         app:showAsAction="always" />
+    <item
+        android:id="@+id/editContactCourses"
+        android:icon="@drawable/baseline_school_24"
+        android:title="Edit Courses"
+        app:showAsAction="always" />
 </menu>
