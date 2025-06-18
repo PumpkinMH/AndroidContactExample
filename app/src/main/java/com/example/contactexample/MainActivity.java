@@ -56,6 +56,7 @@ private DBHandler db;
             Intent intent = new Intent(this, ViewContactActivity.class);
             intent.putExtra("contact", contacts.get(position));
             intent.putExtra("schools", schools);
+            intent.putExtra("courses", courses);
             startForViewResult.launch(intent);
         });
 

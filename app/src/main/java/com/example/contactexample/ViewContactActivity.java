@@ -24,8 +24,10 @@ public class ViewContactActivity extends AppCompatActivity {
     private TextView schoolDisplay;
     private TextView nationalityDisplay;
     private TextView genderDisplay;
+    private TextView courseDisplay;
     private Contact contact;
     private ArrayList<School> schools;
+    private ArrayList<Course> courses;
     private ActivityResultLauncher<Intent> startForEditResult;
 
     public static final int RESULT_CODE_DELETE = 101;
@@ -43,6 +45,7 @@ public class ViewContactActivity extends AppCompatActivity {
         });
 
         schools = (ArrayList<School>) getIntent().getSerializableExtra("schools");
+        courses = (ArrayList<Course>) getIntent().getSerializableExtra("courses");
 
         setSupportActionBar(findViewById(R.id.toolbar3));
         getSupportActionBar().setTitle("View Contact");
@@ -53,6 +56,7 @@ public class ViewContactActivity extends AppCompatActivity {
         schoolDisplay = findViewById(R.id.schoolDisplay);
         nationalityDisplay = findViewById(R.id.nationalityDisplay);
         genderDisplay = findViewById(R.id.genderDisplay);
+        courseDisplay = findViewById(R.id.courseDisplay);
 
         contact = (Contact) getIntent().getSerializableExtra("contact");
 
@@ -120,5 +124,16 @@ public class ViewContactActivity extends AppCompatActivity {
 
         nationalityDisplay.setText(getString(R.string.nationality_display, sourceContact.getNationality()));
         genderDisplay.setText(getString(R.string.gender_display, sourceContact.getGender()));
+
+        StringBuilder coursesString = new StringBuilder();
+        for(Course course : this.courses) {
+            for(long courseId : sourceContact.getCourseIds()) {
+                if(courseId == course.getCourseId()) {
+                    coursesString.append(course.getShortName()).append(", ");
+                }
+            }
+        }
+        coursesString.replace(coursesString.length() - 2, coursesString.length(), "");
+        courseDisplay.setText(getString(R.string.course_display, coursesString.toString()));
     }
 }

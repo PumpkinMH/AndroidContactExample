@@ -9,5 +9,6 @@
     <string name="school_display">Schools: %1$s</string>
     <string name="nationality_display">Nationality: %1$s</string>"
     <string name="gender_display">Gender: %1$s</string>
+    <string name="course_display">Courses: %1$s</string>"
 
 </resources>
