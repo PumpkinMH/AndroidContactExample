@@ -64,4 +64,9 @@ public class Course implements Serializable {
             throw new IllegalStateException("Course id already set");
         }
     }
+
+    @Override
+    public String toString() {
+        return shortName;
+    }
 }

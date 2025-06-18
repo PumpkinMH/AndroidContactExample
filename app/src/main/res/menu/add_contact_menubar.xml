@@ -3,6 +3,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/selectCourse"
+        android:icon="@drawable/baseline_school_24"
+        android:title="Select Courses"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/createContact"
         android:icon="@drawable/outline_add_24"
         android:title="Create Contact"
