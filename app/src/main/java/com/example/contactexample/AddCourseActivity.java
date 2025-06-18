@@ -51,6 +51,7 @@ public class AddCourseActivity extends AppCompatActivity {
 
         ArrayAdapter<School> schoolArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, schools);
         schoolArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        courseSchoolSpinner.setAdapter(schoolArrayAdapter);
     }
 
     @Override
