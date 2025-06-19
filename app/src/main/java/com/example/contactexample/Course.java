@@ -1,5 +1,7 @@
 package com.example.contactexample;
 
+import androidx.annotation.Nullable;
+
 import java.io.Serializable;
 
 public class Course implements Serializable {
@@ -68,5 +70,20 @@ public class Course implements Serializable {
     @Override
     public String toString() {
         return shortName;
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if(obj == null) {
+            return false;
+        }
+        if(obj == this) {
+            return true;
+        }
+        if(!(obj instanceof Course)) {
+            return false;
+        }
+        Course other = (Course) obj;
+        return this.courseId == other.courseId;
     }
 }
