@@ -115,6 +115,12 @@ public class AddContactActivity extends AppCompatActivity {
                 }
 
                 ArrayList<Course> selectedCourses = new ArrayList<Course>();
+                for(int i = 0; i < checkedCourses.length; i++) {
+                    if(checkedCourses[i]) {
+                        selectedCourses.add(availableCourses.get(i));
+                    }
+                }
+
                 AlertDialog.Builder builder = new AlertDialog.Builder(this)
                         .setTitle("Select Courses")
                         .setMultiChoiceItems(courseNames, checkedCourses, (dialog, which, isChecked) -> {
