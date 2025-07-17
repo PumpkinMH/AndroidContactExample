@@ -40,7 +40,7 @@ public class AddCourseActivity extends AppCompatActivity {
         Intent intent = getIntent();
         schools = (ArrayList<School>) intent.getSerializableExtra("schools");
 
-        setSupportActionBar(findViewById(R.id.addCourseToolbar));
+        ;
         getSupportActionBar().setTitle("Add Course");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

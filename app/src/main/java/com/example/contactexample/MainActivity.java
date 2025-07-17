@@ -17,6 +17,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.material.color.DynamicColors;
+
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -40,8 +42,9 @@ private DBHandler db;
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        DynamicColors.applyToActivitiesIfAvailable(getApplication());
 
-        setSupportActionBar(findViewById(R.id.toolbar2));
+        ;
 
         db = new DBHandler(this);
         contacts = getContactList();

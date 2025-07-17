@@ -54,7 +54,7 @@ public class AddContactActivity extends AppCompatActivity {
 
         selectedCoursesIds = new long[0];
 
-        setSupportActionBar(findViewById(R.id.toolbar));
+        ;
         getSupportActionBar().setTitle("Add Contact");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

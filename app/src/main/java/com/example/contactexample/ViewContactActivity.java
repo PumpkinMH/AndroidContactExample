@@ -6,6 +6,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
@@ -47,7 +48,7 @@ public class ViewContactActivity extends AppCompatActivity {
         schools = (ArrayList<School>) getIntent().getSerializableExtra("schools");
         courses = (ArrayList<Course>) getIntent().getSerializableExtra("courses");
 
-        setSupportActionBar(findViewById(R.id.toolbar3));
+        ;
         getSupportActionBar().setTitle("View Contact");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

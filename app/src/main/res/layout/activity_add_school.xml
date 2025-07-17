@@ -7,17 +7,6 @@
     android:layout_height="match_parent"
     tools:context=".AddSchoolActivity">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/addSchoolToolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <EditText
         android:id="@+id/schoolNameInput"
         android:layout_width="0dp"
@@ -26,8 +15,7 @@
         android:hint="School Name"
         android:inputType="text"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addSchoolToolbar" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Spinner
         android:id="@+id/schoolLocationSpinner"

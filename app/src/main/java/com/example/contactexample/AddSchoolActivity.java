@@ -31,7 +31,7 @@ public class AddSchoolActivity extends AppCompatActivity {
             return insets;
         });
 
-        setSupportActionBar(findViewById(R.id.addSchoolToolbar));
+        ;
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Add School");
 

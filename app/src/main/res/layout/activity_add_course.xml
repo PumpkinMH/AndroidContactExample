@@ -7,17 +7,6 @@
     android:layout_height="match_parent"
     tools:context=".AddCourseActivity">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/addCourseToolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <EditText
         android:id="@+id/courseFullName"
         android:layout_width="0dp"
@@ -26,8 +15,7 @@
         android:hint="Full Name"
         android:inputType="text"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addCourseToolbar" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
         android:id="@+id/courseShortName"

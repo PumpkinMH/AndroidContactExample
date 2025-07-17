@@ -75,7 +75,7 @@ public class EditContactActivity extends AppCompatActivity {
             this.contactGender.check(R.id.contactGenderOther);
         }
 
-        setSupportActionBar(findViewById(R.id.toolbar4));
+        ;
         getSupportActionBar().setTitle("Edit Contact");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
